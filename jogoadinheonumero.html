@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Jogo de Adivinhação</title>
+    <style>
+        body {
+            background-color: black;
+            color: white;
+        }
+        .verde {
+            color: green;
+            font-size: 24px;
+        }
+        .vermelho {
+            color: red;
+            font-size: 24px;
+        }
+        .amarelo {
+            color: yellow;
+            font-size: 24px;
+        }
+        .center {
+            text-align: center;
+            margin-top: 20px;
+        }
+        input {
+            color: black;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="center mt-5">Descubra qual é o numero!</h1>
+        <h2 class="center">São numeros de 1 até o 100.</h2>
+
+        <div class="center">
+            <button onclick="iniciarJogo()">Vamos lá</button>
+        </div>
+
+        <div class="center mt-3">
+            <input type="number" id="numeroPalpite" placeholder="Digite um número" onkeydown="if (event.keyCode === 13) fazerPalpite()">
+        </div>
+
+        <p id="resultado" class="center mt-3"></p>
+
+        <div id="mensagensProximidade" class="center mt-3"></div>
+
+        <div class="center">
+            <button id="tentarNovamente" onclick="fazerPalpite()" disabled>Tentar Novamente</button>
+        </div>
+
+        <div class="center mt-3">
+            <p id="chancesRestantes"></p>
+        </div>
+    </div>
+
+    <script>
+        var numeroAleatorio;
+        var tentativas;
+        var maxTentativas = 100;
+
+        function iniciarJogo() {
+            numeroAleatorio = Math.floor(Math.random() * 100) + 1;
+            tentativas = 0;
+            document.getElementById("resultado").innerHTML = "";
+            document.getElementById("mensagensProximidade").innerHTML = "";
+            document.getElementById("tentarNovamente").disabled = false;
+            document.getElementById("chancesRestantes").innerHTML = "Chances Restantes: " + maxTentativas;
+            document.getElementById("numeroPalpite").value = "";
+            document.getElementById("numeroPalpite").disabled = false;
+            document.getElementById("numeroPalpite").focus();
+        }
+
+        function fazerPalpite() {
+            var palpite = parseInt(document.getElementById("numeroPalpite").value);
+            tentativas++;
+
+            if (palpite < numeroAleatorio) {
+                console.log("Tente um número maior.");
+                document.getElementById("resultado").innerHTML = "Tente um número maior.";
+                document.getElementById("resultado").className = "vermelho";
+            } else if (palpite > numeroAleatorio) {
+                console.log("Tente um número menor.");
+                document.getElementById("resultado").innerHTML = "Tente um número menor.";
+                document.getElementById("resultado").className = "vermelho";
+            } else {
+                console.log("Parabéns! Você acertou o número em " + tentativas + " tentativas.");
+                document.getElementById("resultado").innerHTML = "Parabéns! Você acertou o número em " + tentativas + " tentativas.";
+                document.getElementById("resultado").className = "amarelo";
+                document.getElementById("tentarNovamente").disabled = true;
+                document.getElementById("numeroPalpite").disabled = true;
+            }
+
+            if (Math.abs(palpite - numeroAleatorio) <= 10) {
+                console.log("Você está perto!");
+                var mensagemProximidade = document.createElement("p");
+                mensagemProximidade.innerHTML = "Você está perto!";
+                mensagemProximidade.className = "verde";
+                document.getElementById("mensagensProximidade").innerHTML = "";
+                document.getElementById("mensagensProximidade").appendChild(mensagemProximidade);
+            }
+
+            document.getElementById("chancesRestantes").innerHTML = "Chances Restantes: " + (maxTentativas - tentativas);
+            document.getElementById("numeroPalpite").value = "";
+            document.getElementById("numeroPalpite").focus();
+
+            if (tentativas >= maxTentativas) {
+                console.log("Suas chances acabaram. O número correto era: " + numeroAleatorio);
+                document.getElementById("resultado").innerHTML = "Suas chances acabaram. O número correto era: " + numeroAleatorio;
+                document.getElementById("resultado").className = "vermelho";
+                document.getElementById("tentarNovamente").disabled = true;
+                document.getElementById("numeroPalpite").disabled = true;
+            }
+        }
+    </script>
+</body>
+</html>
